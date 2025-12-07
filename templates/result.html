@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Analysis Result</title>
+    <style>
+        body { font-family: sans-serif; max-width: 800px; margin: 0 auto; padding: 20px; background-color: #f5f5f5; }
+        .container { background: white; padding: 20px; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.1); }
+        pre { background: #eee; padding: 15px; white-space: pre-wrap; border-radius: 5px; }
+        .header-info { border-bottom: 1px solid #ddd; padding-bottom: 10px; margin-bottom: 20px; }
+        a { display: inline-block; margin-top: 20px; text-decoration: none; color: #007bff; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header-info">
+            <h1>Analysis Results</h1>
+            <p><strong>File:</strong> {{ filename }}</p>
+            <p><strong>Model:</strong> {{ model }}</p>
+        </div>
+        
+        <h3>LLM Response:</h3>
+        <pre>{{ response }}</pre>
+        
+        <a href="/">← Back to Dashboard</a>
+    </div>
+</body>
+</html>
+

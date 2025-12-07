@@ -1,0 +1,21 @@
+You are an expert horse racing analyst.
+
+Start your response with your model name then
+Analyze the following horse racing data and provide:
+- Key insights from each section
+- Top horse picks with reasoning
+- Predicted winner(s) and placers
+- Value bets or risks
+- Any other relevant advice
+
+Structure your response clearly.
+
+## Race Information
+{race_info}
+
+## Summary Data
+{summary_data}
+
+## Pace Data
+{pace_data}
+

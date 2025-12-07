@@ -1,0 +1,24 @@
+<!doctype html>
+{% extends "layout.html" %}
+{% block title %}Manage Files{% endblock %}
+
+{% block content %}
+<h1>🗑️ File Management</h1>
+<p>This interface lets you clean up split races and their original uploaded PDF files.</p>
+
+{% if subdirs %}
+    <ul>
+        {% for subdir in subdirs %}
+        <li style="margin-bottom: 10px;">
+            <strong>{{ subdir }}</strong><br>
+            <form method="POST" action="{{ url_for('manage_bp.delete', subdir=subdir) }}" onsubmit="return confirm('Delete {{ subdir }} and its .pdf?');">
+                <button type="submit" style="background-color: #dc3545; color: white; border: none; padding: 6px 12px; border-radius: 4px;">Delete {{ subdir }}</button>
+            </form>
+        </li>
+        {% endfor %}
+    </ul>
+{% else %}
+    <p>No split directories found in <code>split_races/</code>.</p>
+{% endif %}
+
+{% endblock %}

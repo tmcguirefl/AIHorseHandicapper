@@ -1,0 +1,64 @@
+{% extends "layout.html" %}
+{% block title %}Horse Racing Data Processor{% endblock %}
+
+{% block content %}
+<h1>🐎 Horse Racing Data Processor</h1>
+
+<div class="note">
+    <p><strong>Tip:</strong> Edit <code>models.json</code> to add or change LLM options.</p>
+</div>
+
+<form method="post">
+    <label for="model_select">Select Model:</label>
+    <select id="model_select" name="model" required>
+        {% for display_name, model_id in models %}
+        <option value="{{ model_id }}" {% if selected_model == model_id %}selected{% endif %}>
+            {{ display_name }}
+        </option>
+        {% endfor %}
+    </select>
+
+    <label for="race_info">Race Info:</label>
+    <textarea id="race_info" name="race_info" rows="10" placeholder="Paste Race Info here...">{{ race_info or '' }}</textarea>
+
+    <label for="summary_data">Summary Data:</label>
+    <textarea id="summary_data" name="summary_data" rows="10" placeholder="Paste Summary Data here...">{{ summary_data or '' }}</textarea>
+
+    <label for="pace_data">Pace Data:</label>
+    <textarea id="pace_data" name="pace_data" rows="10" placeholder="Paste Pace Data here...">{{ pace_data or '' }}</textarea>
+
+    <div id="buttons">
+        <button type="submit">Send to LLM</button>
+        <button type="button" class="clear" onclick="clearForm()">Clear All</button>
+    </div>
+</form>
+
+{% if result %}
+<div id="result-section">
+    <h2>💡 LLM Response:</h2>
+    <pre>{{ result }}</pre>
+</div>
+{% endif %}
+
+{% if error %}
+<div id="error-section">
+    <h2>⚠️ Error:</h2>
+    <pre style="background: #f8d7da; color: #721c24;">{{ error }}</pre>
+</div>
+{% endif %}
+
+<script>
+function clearForm() {
+    document.getElementById('race_info').value = '';
+    document.getElementById('summary_data').value = '';
+    document.getElementById('pace_data').value = '';
+    document.getElementById('model_select').selectedIndex = 0;
+
+    const resultSection = document.getElementById('result-section');
+    if (resultSection) resultSection.style.display = 'none';
+
+    const errorSection = document.getElementById('error-section');
+    if (errorSection) errorSection.style.display = 'none';
+}
+</script>
+{% endblock %}
