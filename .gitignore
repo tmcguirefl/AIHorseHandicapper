@@ -8,5 +8,4 @@ split_races/
 *.log
 .DS_Store
 old/
-pyproject.toml
 
