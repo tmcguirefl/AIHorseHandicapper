@@ -1,10 +1,3 @@
-# horsesite.py - cut and paste data twinspires provides in there betting application
-#                the summary table and it's race info line; the pace data table
-#
-# Copyright (c) 2025 tmcguirefl user on github
-# This file is part of ProjectName released under the MIT License.
-# See LICENSE file in the project root for licensing information.
-
 import os
 import json
 import logging
@@ -21,6 +14,10 @@ logging.basicConfig(level=logging.INFO)
 BASE_DIR = os.environ.get('BASE_DIR', os.getcwd())
 PROMPT_FILE = os.path.join(BASE_DIR, os.environ.get('PROMPT_FILE', 'data/prompt_template.txt'))
 JSON_PATH = os.path.join(BASE_DIR, os.environ.get('JSON_PATH', 'data/models.json'))
+
+# Load API KEY from environment
+OPENROUTER_API_KEY = os.environ.get('OPENROUTER_API_KEY')
+logging.info(f"API_KEY={OPENROUTER_API_KEY}")
 
 # Default prompt template fallback
 DEFAULT_PROMPT_TEMPLATE = """You are an expert horse racing analyst.
@@ -88,25 +85,28 @@ def index():
 
         if not (race_info or summary_data or pace_data):
             error = "Please provide at least some data."
+        elif not OPENROUTER_API_KEY:
+            error = "API Key is not set. Please set the OPENROUTER_API_KEY environment variable."
         else:
             prompt = load_prompt_from_file(race_info, summary_data, pace_data)
+            headers = {
+                'Authorization': f'Bearer {OPENROUTER_API_KEY}',
+                'Content-Type': 'application/json',
+                'HTTP-Referer': 'http://localhost:5000/',
+                'X-Title': 'Horse Racing Analyzer',
+            }
+            data = {
+                'model': selected_model,
+                'messages': [{'role': 'user', 'content': prompt}],
+                'temperature': 0.7,
+                'max_tokens': 4000,
+            }
 
             try:
-                from app.config import API_KEY  # Assumes you have centralized API key config
                 response = requests.post(
                     'https://openrouter.ai/api/v1/chat/completions',
-                    headers={
-                        'Authorization': f'Bearer {API_KEY}',
-                        'Content-Type': 'application/json',
-                        'HTTP-Referer': 'http://localhost:5000/',
-                        'X-Title': 'Horse Racing Analyzer',
-                    },
-                    json={
-                        'model': selected_model,
-                        'messages': [{'role': 'user', 'content': prompt}],
-                        'temperature': 0.7,
-                        'max_tokens': 4000,
-                    },
+                    headers=headers,
+                    json=data
                 )
                 response.raise_for_status()
                 result = response.json()['choices'][0]['message']['content']

@@ -5,15 +5,17 @@
 
 import os
 from flask import Flask, render_template_string
+from dotenv import load_dotenv
+load_dotenv('./.env')
+
 from app.horsesite import horsesite_bp
 from app.horsepdf import split_bp
 from app.management import manage_bp
-from dotenv import load_dotenv
 
-load_dotenv()
 
 app = Flask(__name__)
 app.secret_key = 'unified-horse-key'  # Shared across blueprints
+
 
 # Register blueprints at desired paths
 app.register_blueprint(horsesite_bp)
@@ -32,6 +34,7 @@ def home():
     """)
 
 if __name__ == '__main__':
-    port = int(os.environ.get('PORT', 5000))
-    app.run(host='0.0.0.0', port=port)
+    port = int(os.environ.get('FLASK_RUN_PORT', 5000))
+    host = os.environ.get('FLASK_RUN_HOST','0.0.0.0')
+    app.run(host=host, port=port)
 

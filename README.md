@@ -19,17 +19,30 @@ This project is licensed under the [MIT License](LICENSE).
 ## 🛠️ Development Environment Setup (macOS + Python 3.13 + uv)
 
 This project uses [`uv`](https://github.com/astral-sh/uv) for fast dependency management and a virtual environment with **Python 3.13** (installed via Homebrew).
+Absolutely! Here's a clean Markdown snippet including **steps 1–4** for installing **`uv` with Homebrew on macOS**, ready to paste into your `README.md` file:
 
-### ✅ Prerequisites
-
+---
+## ✅ Prerequisites for macOS insall
 - Homebrew
-- [`uv`](https://github.com/astral-sh/uv) installed:
-  
-  ```sh
-  pip install uv
-  ```
+- Python 3.13 installed via Homebrew
+- [`uv`](https://github.com/astral-sh/uv) installed via Homebrew
 
-- Python 3.13 installed via Homebrew:
+### 1. ✅ Make sure Homebrew is installed
+
+If you don’t already have Homebrew installed, run:
+
+```bash
+/bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
+```
+Then verify the installation:
+
+```bash
+brew doctor
+```
+
+---
+
+### Python 3.13 installed via Homebrew:
 
   ```sh
   brew install python@3.13
@@ -37,19 +50,72 @@ This project uses [`uv`](https://github.com/astral-sh/uv) for fast dependency ma
 
 ---
 
+### 🚀 Installing `uv` on macOS using Homebrew
+
+Follow these steps to install the ultra-fast Python package manager [`uv`](https://github.com/astral-sh/uv) on macOS.
+
+
+
+### 1. ✅ Tap the Astral `uv` formula
+
+Add Astral’s official Homebrew tap:
+
+```bash
+brew tap astral-sh/uv
+```
+
+---
+
+### 2. ✅ Install `uv`
+
+Install `uv` via Homebrew:
+
+```bash
+brew install uv
+```
+
+---
+
+### 4. ✅ Verify the `uv` installation
+
+Ensure that `uv` is installed successfully:
+
+```bash
+uv --version
+```
+
+You should see an output similar to:
+
+```
+uv 0.1.x
+```
+
+---
+
+Now you're ready to use `uv` to quickly manage Python virtual environments and packages! 🐍⚡
+
+--- 
+
+
 ## ☁️ How to Set Up the Project
 
 ### 1. Clone the Repo
-
+Usually you want to clone in a subdirectory off your main tree. For example a
+directory called pythondev.  
 ```sh
-git clone https://github.com/your-username/horse-portal.git
-cd horse-portal
+mkdir pythondev
+cd pythondev
+git clone https://github.com/tmcguirefl/AIHorseHandicapper.git
+cd AIHorseHandicapper
 ```
 
 ### 2. Create a Virtual Environment (Python 3.13)
+To be sure you are using the correct python version we will use command line
+flags to tell "uv" which python version to use when you enter the virtual environment. We also add a prompt which should appear in your shell prompt when you 
+activate the virtual envionment.
 
 ```sh
-uv venv --python /opt/homebrew/bin/python3.13 --prompt flaskWEB
+uv venv --python /opt/homebrew/bin/python3.13 --prompt AIHH
 source .venv/bin/activate
 ```
 
@@ -59,16 +125,12 @@ source .venv/bin/activate
   python3 --version  # Should show Python 3.13.x
   ```
 
-### 3. Add Required Packages
+---
+
+### 3. uv sync the repository to bring in the required libraries
 
 ```sh
-uv add flask requests PyPDF2 dotenv
-```
-
-You can confirm packages are installed with:
-
-```sh
-uv pip list
+uv sync
 ```
 
 ---
@@ -78,13 +140,13 @@ uv pip list
 After installing dependencies:
 
 ```sh
-python3 main.py
+Flask run
 ```
 
 Then visit:
 
 ```
-http://localhost:5000
+http://localhost:5500
 ```
 
 ### App Routes:
@@ -93,7 +155,7 @@ http://localhost:5000
 |--------------------|--------------------------------------|
 | `/`                | Landing page / Portal                |
 | `/horsesite`       | Horse data processor via LLM         |
-| `/split`           | Upload & split PDF files             |
+| `/horsepdf`        | Upload & split PDF files             |
 | `/manage`          | Delete split folders and PDFs        |
 
 ---
@@ -104,13 +166,14 @@ http://localhost:5000
 horse-portal/
 ├── app/
 │   ├── __init__.py
-│   ├── horsesite.py        # LLM UI logic
-│   ├── split_app.py        # PDF splitting logic
+│   ├── horsesite.py        # Twinspires cut and paste LLM UI logic
+│   ├── horsepdf.py         # PDF splitting logic
 │   ├── management.py       # Delete split/uploaded files
 │
 ├── templates/
 │   ├── layout.html
-│   ├── index.html
+│   ├── horsesite.html
+│   ├── horsepdf.html
 │   ├── manage.html
 │   ├── result.html
 │
@@ -125,28 +188,16 @@ horse-portal/
 
 ## 🔑 Environment Variables
 
-You must set the following environment variable to access OpenRouter or other LLM providers:
+You must set the following environment variable in the ".env" file to access OpenRouter. Just edit the ".env" with your favorite text editor and find the line below:
 
-```sh
-export OPENROUTER_API_KEY="your-api-key-here"
 ```
+OPENROUTER_API_KEY=<your-api-key-here>
+```
+add you Openrouter API_KEY there. 
 
-You may want to add this line to your `.zshrc` or `.bashrc`.
 
 ---
 
-## ✅ Example `pyproject.toml`
-The following example is contained in the repo with the name pyproject.toml.start
-It's contents are as follows:
-
-```toml
-[project]
-name = "horse-portal"
-version = "0.1.0"
-
-```
-
----
 
 ## 👥 About
 

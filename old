@@ -5,4 +5,4 @@ FLASK_RUN_HOST=0.0.0.0
 BASE_DIR=.
 PROMPT_FILE=data/prompt_template.txt
 JSON_PATH=data/models.json
-OPENROUTER_API_KEY=<your_openrouter_api_key_here>
+OPENROUTER_API_KEY=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
