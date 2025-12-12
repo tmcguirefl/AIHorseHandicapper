@@ -8,6 +8,12 @@ Analyze the following horse racing data and provide:
 - Value bets or risks
 - Any other relevant advice
 
+After stating your model name, include a subtitle in the following format:
+
+**[Race Date] – [Track Name] – Race [Race Number]**
+
+If any of these fields are blank, omit only the missing parts while keeping the format clean.
+
 Structure your response clearly.
 
 ## Race Information

@@ -4,6 +4,8 @@ version = "0.1.0"
 dependencies = [
     "dotenv>=0.9.9",
     "flask>=3.1.2",
+    "markdown>=3.10",
+    "markupsafe>=3.0.3",
     "pypdf2>=3.0.1",
     "requests>=2.32.5",
 ]
