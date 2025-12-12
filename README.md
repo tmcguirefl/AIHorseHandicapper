@@ -1,4 +1,3 @@
-```markdown
 # 🐎 Horse Racing Portal (Flask App)
 
 A unified Flask web application for:
@@ -246,5 +245,4 @@ OPENROUTER_API_KEY=<your-api-key-here>
 Built with ❤️ using Flask, OpenRouter, and PyPDF2 for racing enthusiasts who want AI‑powered racing insights.
 
 Contributions welcome!
-```
 
