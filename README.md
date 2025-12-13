@@ -3,8 +3,24 @@
 A unified Flask web application for:
 
 - 🧠 Horse racing data analysis using LLMs (OpenRouter / OpenAI)
+  - This allows you to cut and paste racing data from a betting site
+  - currently works with data tables available under twinspires
+  - On a betting window for a race use the pace and the summary tabs for the data
 - 📄 Uploading and splitting race PDFs into individual races
+  - This works for an entire track card pdf.
+  - Currently works for brisnet ultimate PP with comments
+  - it should work for other services pdfs
+  - The races need to be split to make sure you can use AI models with lower context limits
 - 🗑️ Management interface to clean up old uploads and split files
+
+This Flask web server that is meant to run locally on a personal machine. You will need your own
+accounts for openrouter and the betting application of your choice. It does not automatically place 
+bets for you. It is only meant to test out how different AI models analyze races. The goal is to
+find the best model for your particular betting style. In limited testing most models are able to 
+pick the short morning line odds horses since they have the best numbers in their past performance. 
+Grok seems to be able flag higher priced horses that have a chance to upset (but not as its first pick.
+It may have to do with the prompt being used. There are no statistics on this. There will need to be some 
+experimentation with the prompt, especially if you like to play exotics.
 
 ---
 
