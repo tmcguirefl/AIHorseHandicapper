@@ -22,6 +22,14 @@ Grok seems to be able flag higher priced horses that have a chance to upset (but
 It may have to do with the prompt being used. There are no statistics on this. There will need to be some 
 experimentation with the prompt, especially if you like to play exotics.
 
+
+## Support
+
+If you like the project and want to help support financially or you hit it big at the track using the 
+software and want to show your appreciation. The project would appreciate it:
+
+[![Ko-fi](https://ko-fi.com/img/githubbutton_sm.svg)](https://ko-fi.com/yourusername)
+
 ---
 
 ## License
