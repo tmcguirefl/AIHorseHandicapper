@@ -1,0 +1,31 @@
+# {timestamp}
+
+Start your response with your model name then analyze the following pools data for handicapping the race.
+
+## Race Information
+Date: {race_date}
+Track: {track}
+Race Number: {race_number}
+
+## Task Instructions
+The input data is raw text copied from an HTML table of horse racing pools (odds for win, place, and show markets). Perform the following steps:
+
+1. **Reconstruct the Table**: Parse and clean the messy text into a clean Markdown table. Identify columns such as Horse Name, Win Odds, Place Odds, and Show Odds (handle variations like Win Pool, Place Pool, etc.). Calculate implied probabilities for each horse and market (Probability = 1 / Odds, assuming decimal odds). Add columns for these such as "Win Prob", "Place Prob", and "Show Prob".
+
+2. **Identify Under-Bet Horses**: Treat the win pool as the efficient market (true probabilities). Compare place and show pools to the win pool. Flag horses where:
+   - The implied place or show probability is LOWER than the win probability for the same horse (meaning the lateral pools are underestimating the horse's chances compared to the win market).
+
+3. **Arbitrage Analysis**: Check for betting arbitrage opportunities across win/place/show pools:
+   - For each horse, ensure prob(win) * p(win) + prob(place) * p(win) + prob(show) * p(win) approximates 1 (no overlap). Flag if across all horses, the total implied probabilities exceed 1 (indicating overround and possible profitable combined bets).
+   - Identify specific arbitrage bets (e.g., "Back Horse A to win and place simultaneously for guaranteed profit, or hedge with show bets").
+
+4. **Recommendations**: For under-bet horses, suggest value bets in the place/show pools. Provide handicapping insights (e.g., why odds are mispriced). Include calculated edge (e.g., expected value of a $10 bet).
+
+## Pools Data
+{pools_data}
+
+## Response Output Format
+- **Reconstructed Table**: Display the cleaned Markdown table first.
+- **Analysis Section**: Explain under-bet horses and arbitrage opportunities in bullet points.
+- **Final Recommendations**: List 2-3 actionable bets or strategies.
+
