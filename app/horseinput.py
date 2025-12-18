@@ -1,4 +1,7 @@
-# horsesite.py - updated with Extract button, new fields, and timestamp feature
+# horseinput.py - Flask blueprint for manual horse racing data input and LLM analysis
+# Copyright (c) 2025 tmcguirefl user on github
+# This file is part of AIHorseHandicapper project released under the MIT License.
+# See LICENSE file in the project root for licensing information.
 
 import os
 import json
@@ -9,12 +12,12 @@ from flask import Blueprint, request, render_template, jsonify
 from markupsafe import Markup
 import markdown
 
-horsesite_bp = Blueprint('horsesite_bp', __name__, url_prefix='/horsesite')
+horseinput_bp = Blueprint('horseinput_bp', __name__, url_prefix='/horseinput')
 
 logging.basicConfig(level=logging.INFO)
 
 BASE_DIR = os.environ.get('BASE_DIR', os.getcwd())
-PROMPT_FILE = os.path.join(BASE_DIR, os.environ.get('PROMPT_FILE1', 'data/prompt_template1.txt'))
+PROMPT_FILE = os.path.join(BASE_DIR, os.environ.get('PROMPT_FILE2', 'data/prompt_template2.txt'))
 JSON_PATH = os.path.join(BASE_DIR, os.environ.get('JSON_PATH', 'data/models.json'))
 
 OPENROUTER_API_KEY = os.environ.get('OPENROUTER_API_KEY')
@@ -26,12 +29,14 @@ Start your response with your model name then analyze the following race.
 
 ## Race Information
 Date: {race_date}
+Track: {track}
 Race Number: {race_number}
 
-{race_info}
+## Speed Data
+{speed_data}
 
-## Summary Data
-{summary_data}
+## Class Data
+{class_data}
 
 ## Pace Data
 {pace_data}
@@ -40,40 +45,33 @@ Race Number: {race_number}
 {user_insights}
 """
 
-def build_timestamp(race_date, race_number, race_info):
+def build_timestamp(track, race_date, race_number):
     """Create 'YYYY-MM-DD • TRACK • Race X' timestamp."""
-    track = ""
-
-    if race_info.strip():
-        first_line = race_info.strip().splitlines()[0]
-        parts = first_line.split()
-        if parts:
-            track = parts[0]  # e.g., CD, GP, SA, AQU
-
     timestamp_parts = []
     if race_date:
         timestamp_parts.append(race_date)
     if track:
-        timestamp_parts.append(track)
+        timestamp_parts.append(track.upper())
     if race_number:
         timestamp_parts.append(f"Race {race_number}")
 
     return " • ".join(timestamp_parts)
 
 
-def load_prompt_from_file(race_info, summary_data, pace_data, race_date, race_number, user_insights):
+def load_prompt_from_file(track, speed_data, class_data, pace_data, race_date, race_number, user_insights):
     try:
         with open(PROMPT_FILE, 'r') as f:
             template = f.read()
     except Exception:
         template = DEFAULT_PROMPT_TEMPLATE
 
-    timestamp = build_timestamp(race_date, race_number, race_info)
+    timestamp = build_timestamp(track, race_date, race_number)
 
     return template.format(
         timestamp=timestamp,
-        race_info=race_info,
-        summary_data=summary_data,
+        track=track,
+        speed_data=speed_data,
+        class_data=class_data,
         pace_data=pace_data,
         race_date=race_date,
         race_number=race_number,
@@ -93,99 +91,40 @@ def load_models():
         ]
 
 
-def extract_race_info(summary_data):
-    """Implements final Option 3:
-
-    1. Find 'Help us improve Summary'
-    2. Find first 'RACE STATS' after that
-    3. Extract everything AFTER that → race info
-    4. Summary becomes everything ABOVE the help line
-    """
-
-    if not summary_data:
-        return "", summary_data
-
-    lines = summary_data.splitlines()
-
-    help_idx = None
-    for i, line in enumerate(lines):
-        if "help us improve summary" in line.lower():
-            help_idx = i
-            break
-
-    if help_idx is None:
-        return "", summary_data
-
-    race_stats_idx = None
-    for i in range(help_idx + 1, len(lines)):
-        if "race stats" in lines[i].lower():
-            race_stats_idx = i
-            break
-
-    if race_stats_idx is None:
-        return "", summary_data
-
-    extracted_lines = lines[race_stats_idx + 1:]
-    race_info_block = "\n".join(extracted_lines).strip()
-
-    cleaned_summary = "\n".join(lines[:help_idx]).strip()
-
-    return race_info_block, cleaned_summary
-
-
-@horsesite_bp.route('/extract', methods=['POST'])
-def extract_route():
-    summary_data = request.form.get('summary_data', '').strip()
-    race_info = request.form.get('race_info', '').strip()
-
-    if race_info:
-        return jsonify({
-            "race_info": race_info,
-            "summary_data": summary_data,
-            "message": "Race Info not empty; extraction skipped."
-        })
-
-    extracted, cleaned = extract_race_info(summary_data)
-
-    return jsonify({
-        "race_info": extracted,
-        "summary_data": cleaned,
-        "message": "Extraction completed."
-    })
-
-
-@horsesite_bp.route('/', methods=['GET', 'POST'])
+@horseinput_bp.route('/', methods=['GET', 'POST'])
 def index():
     MODELS = load_models()
     DEFAULT_MODEL = MODELS[0][1]
 
-    race_info = ''
-    summary_data = ''
+    track = ''
+    speed_data = ''
+    class_data = ''
     pace_data = ''
     user_insights = ''
     race_date = date.today().isoformat()
-    race_number = ''
+    race_number = '1'  # Default for select
     selected_model = DEFAULT_MODEL
     result_html = None
     error = None
 
     if request.method == 'POST':
-        race_info = request.form.get('race_info', '').strip()
-        summary_data = request.form.get('summary_data', '').strip()
+        track = request.form.get('track', '').strip()
+        speed_data = request.form.get('speed_data', '').strip()
+        class_data = request.form.get('class_data', '').strip()
         pace_data = request.form.get('pace_data', '').strip()
         user_insights = request.form.get('user_insights', '').strip()
         race_date = request.form.get('race_date', race_date)
-        race_number = request.form.get('race_number', '')
+        race_number = request.form.get('race_number', race_number)
         selected_model = request.form.get('model', DEFAULT_MODEL)
 
-        if not (race_info or summary_data or pace_data or user_insights):
+        if not (track or speed_data or class_data or pace_data or user_insights):
             error = "Please provide at least some data."
         elif not OPENROUTER_API_KEY:
             error = "API Key not set."
         else:
-            timestamp = build_timestamp(race_date, race_number, race_info)
+            timestamp = build_timestamp(track, race_date, race_number)
             prompt = load_prompt_from_file(
-                race_info, summary_data, pace_data,
+                track, speed_data, class_data, pace_data,
                 race_date, race_number, user_insights
             )
 
@@ -213,7 +152,7 @@ def index():
 
                 raw = response.json()['choices'][0]['message']['content']
 
-                # PREPEND TIMESTAMP TO MARKDOWN SHOWN IN horsesite.html
+                # PREPEND TIMESTAMP TO MARKDOWN SHOWN IN horseinput.html
                 final_markdown = f"# {timestamp}\n\n" + raw
 
                 result_html = Markup(markdown.markdown(final_markdown))
@@ -222,10 +161,11 @@ def index():
                 error = f"Error: {str(e)}"
 
     return render_template(
-        'horsesite.html',
+        'horseinput.html',
         models=MODELS,
-        race_info=race_info,
-        summary_data=summary_data,
+        track=track,
+        speed_data=speed_data,
+        class_data=class_data,
         pace_data=pace_data,
         user_insights=user_insights,
         race_date=race_date,
@@ -234,4 +174,3 @@ def index():
         result_html=result_html,
         error=error
     )
-

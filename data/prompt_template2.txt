@@ -1,0 +1,21 @@
+# {timestamp}
+
+Start your response with your model name then analyze the following race.
+
+## Race Information
+Date: {race_date}
+Track: {track}
+Race Number: {race_number}
+
+## Speed Data
+{speed_data}
+
+## Class Data
+{class_data}
+
+## Pace Data
+{pace_data}
+
+## User Insights
+{user_insights}
+

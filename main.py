@@ -11,16 +11,16 @@ load_dotenv('./.env')
 from app.horsesite import horsesite_bp
 from app.horsepdf import split_bp
 from app.management import manage_bp
-
+from app.horseinput import horseinput_bp  
 
 app = Flask(__name__)
 app.secret_key = 'unified-horse-key'  # Shared across blueprints
-
 
 # Register blueprints at desired paths
 app.register_blueprint(horsesite_bp)
 app.register_blueprint(split_bp)
 app.register_blueprint(manage_bp)
+app.register_blueprint(horseinput_bp)  
 
 @app.route('/')
 def home():
@@ -28,6 +28,7 @@ def home():
     <h1>Welcome to the Horse Racing Portal 🏇</h1>
     <ul>
         <li><a href="/horsesite">🐴 Horse Data Processor</a></li>
+        <li><a href="/horseinput">📝 Manual Horse Input</a></li>  
         <li><a href="/pdfPP">📄 Upload & Split PDF</a></li>
         <li><a href="/manage">🗑️ Manage Files</a></li>
     </ul>

@@ -1,0 +1,119 @@
+{% extends "layout.html" %}
+{% block title %}Manual Horse Input{% endblock %}
+
+{% block content %}
+
+<style>
+    body {
+        background: #fff7d1;
+    }
+    #results-box {
+        max-height: 400px;
+        overflow-y: auto;
+        padding: 10px;
+        background: #fff;
+        border: 2px solid #ccc;
+        margin-top: 20px;
+        border-radius: 5px;
+    }
+    .result-entry {
+        padding: 10px;
+        margin-bottom: 15px;
+        border-bottom: 1px solid #cfcfcf;
+    }
+    #buttons {
+        margin-top: 10px;
+    }
+    button.clear {
+        background: #4b9fff;
+        color: white;
+        padding: 5px 10px;
+        border-radius: 5px;
+        border: none;
+        cursor: pointer;
+    }
+</style>
+
+<h1>📝 Manual Horse Racing Data Input</h1>
+
+<div class="note">
+    <p><strong>Tip:</strong> Edit <code>models.json</code> to add or change LLM options.</p>
+</div>
+
+<form method="post" id="raceForm">
+
+    <label for="track">Track:</label>
+    <input type="text" id="track" name="track" value="{{ track }}" placeholder="e.g., AQU, CD, GP">
+
+    <label for="race_date">Race Date:</label>
+    <input type="date" id="race_date" name="race_date" value="{{ race_date }}">
+
+    <label for="race_number">Race Number:</label>
+    <select id="race_number" name="race_number">
+        <option value=""></option>
+        {% for n in range(1, 16) %}
+        <option value="{{ n }}" {% if race_number == n|string %}selected{% endif %}>
+            {{ n }}
+        </option>
+        {% endfor %}
+    </select>
+
+    <label for="speed_data">Speed Data:</label>
+    <textarea id="speed_data" name="speed_data" rows="10">{{ speed_data }}</textarea>
+
+    <label for="class_data">Class Data:</label>
+    <textarea id="class_data" name="class_data" rows="10">{{ class_data }}</textarea>
+
+    <label for="pace_data">Pace Data:</label>
+    <textarea id="pace_data" name="pace_data" rows="10">{{ pace_data }}</textarea>
+
+    <label for="user_insights">User Insights:</label>
+    <textarea id="user_insights" name="user_insights" rows="8">{{ user_insights }}</textarea>
+
+    <label for="model_select">Select Model:</label>
+    <select id="model_select" name="model" required>
+        {% for display_name, model_id in models %}
+        <option value="{{ model_id }}" {% if selected_model == model_id %}selected{% endif %}>
+            {{ display_name }}
+        </option>
+        {% endfor %}
+    </select>
+
+    <div id="buttons">
+        <button type="submit">Send to LLM</button>
+        <button type="button" class="clear" onclick="clearForm()">Clear All</button>
+    </div>
+
+</form>
+
+<div id="results-box">
+    {% if result_html %}
+    <div class="result-entry">
+        {{ result_html|safe }}
+    </div>
+    {% endif %}
+</div>
+
+{% if error %}
+<div id="error-section">
+    <h2>⚠️ Error:</h2>
+    <pre style="background: #f8d7da; color: #721c24;">{{ error }}</pre>
+</div>
+{% endif %}
+
+<script>
+function clearForm() {
+    document.getElementById('track').value = '';
+    document.getElementById('speed_data').value = '';
+    document.getElementById('class_data').value = '';
+    document.getElementById('pace_data').value = '';
+    document.getElementById('user_insights').value = '';
+    document.getElementById('race_number').selectedIndex = 0;
+}
+
+let box = document.getElementById("results-box");
+if (box) box.scrollTop = box.scrollHeight;
+</script>
+
+{% endblock %}
+
