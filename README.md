@@ -244,19 +244,29 @@ horse-portal/
 ├── app/
 │   ├── __init__.py
 │   ├── horsesite.py
+│   ├── horseinput.py
+│   ├── horsepools.py
 │   ├── horsepdf.py
 │   ├── management.py
+├── data/
+│   ├── models.json
+│   ├── prompt_template1.txt
+│   ├── prompt_template2.txt
+│   ├── prompt_template3.txt
 ├── templates/
 │   ├── layout.html
 │   ├── horsesite.html
+│   ├── horseinput.html
+│   ├── horsepools.html
 │   ├── horsepdf.html
 │   ├── manage.html
 │   ├── result.html
 ├── uploads/
 ├── split_races/
+├── .env
 ├── pyproject.toml
 ├── main.py
-├── models.json
+├── README.md
 ```
 
 ---
