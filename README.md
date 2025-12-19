@@ -4,12 +4,19 @@ A unified Flask web application for:
 
 - 🧠 Horse racing data analysis using LLMs (OpenRouter / OpenAI)
   - This allows you to cut and paste racing data from a betting site
-  - currently works with data tables available under twinspires
-  - On a betting window for a race use the pace and the summary tabs for the data
+  - Currently works with data tables available under twinspires
+  - On a betting window for a race, use the pace and the summary tabs for the data
+  - (Note: Summary tab access may require a TwinSpires account.)
+- 📝 Manual horse input analysis
+  - Allows you to copy and paste readily available horse past performance data from common US betting sites
+  - Much of this data is accessible without needing an account on the betting site
+- 🎱 Pool data arbitrage analysis
+  - Asks the LLM to arbitrage the place and show pools to find under-bet horses in those pools
+  - This can provide better odds for a winning ticket and possibly better payouts than usual for place/show bets, using the win pool as the efficient market benchmark
 - 📄 Uploading and splitting race PDFs into individual races
   - This works for an entire track card pdf.
   - Currently works for brisnet ultimate PP with comments
-  - it should work for other services pdfs
+  - It should work for other services pdfs
   - The races need to be split to make sure you can use AI models with lower context limits
 - 🗑️ Management interface to clean up old uploads and split files
 
